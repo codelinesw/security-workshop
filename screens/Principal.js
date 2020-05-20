@@ -10,7 +10,7 @@ export default class Principal extends React.Component{
 	  };
 	}
 	componentDidMount(){
-		fetch('https://b2a087a7.ngrok.io/prueba/validarsesion.php',
+		fetch('https://e916d2b3.ngrok.io/prueba/validarsesion.php',
 			  {
 			  	method: 'post',
 			    headers: {

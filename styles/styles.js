@@ -14,7 +14,8 @@ const styles = StyleSheet.create({
   	height:45,
   	padding:5,
   	borderWidth:2,
-  	borderColor:'green'
+  	borderColor:'green',
+    paddingLeft:10
   },
   containerForm: {
   	width:WIDTH,
@@ -36,6 +37,32 @@ const styles = StyleSheet.create({
   	flexDirection:'row',
   	justifyContent:'center',
   	alignItems:'center'
+  },
+
+  botonOnlyBorder: {
+    width: (WIDTH-50),
+    height:55,
+    padding:5,
+    backgroundColor:'transparent',
+    borderRadius:6,
+    flexDirection:'row',
+    justifyContent:'center',
+    alignItems:'center',
+    borderColor:'green',
+    borderWidth:2
+  },
+
+  msg:{
+     width: (WIDTH-50),
+     padding:15,
+  },
+
+  bgGreen:{
+    backgroundColor:'green'
+  },
+
+  bgRed: {
+     backgroundColor:'red'
   }
 });
 

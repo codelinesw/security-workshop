@@ -6,6 +6,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import Home from '../screens/Home'; 
 import Login from '../screens/Login';
 import Principal from '../screens/Principal'; 
+import Register from '../screens/Register'; 
 const WIDTH = Dimensions.get('window').width;
 
 
@@ -22,6 +23,12 @@ const ConfigGlobal = createStackNavigator(
       screen: Login,
       navigationOptions: ({navigation}) => ({
           title:'Inicio de Sesion'
+      })
+    },
+    Register: {
+      screen: Register,
+      navigationOptions: ({navigation}) => ({
+          title:'Registrate'
       })
     },
 
@@ -63,6 +70,10 @@ const DrawerNavigator = createDrawerNavigator(
 
     Principal: {
       screen:Principal
+    },
+
+    Register: {
+      screen:Register
     },
    
   }

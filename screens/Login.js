@@ -8,7 +8,10 @@ export default class Login extends React.Component{
 
 		this.state = {
 			username:'',
-			password:''
+			password:'',
+			mensaje:'',
+			background:'',
+			visible_:false
 		}
 	}
 
@@ -16,13 +19,13 @@ export default class Login extends React.Component{
 		const { username , password } = this.state;
 		//alert('username => ' + username + ' - ' + password);
 		if(username.length == 0 && password.length == 0){
-			alert('Por favor complete todos los campos');
+			this.setState({mensaje:'Por favor complete todos los campos',background:styles.bgRed,visible_:true});
 		}else if(username.length == 0){
-			alert('Por favor complete el campo username');
+			this.setState({mensaje:'Por favor complete el campo username',background:styles.bgRed,visible_:true});
 		}else if(password.length == 0){
-			alert('Por favor complete el campo password');
+			this.setState({mensaje:'Por favor complete el campo password',background:styles.bgRed,visible_:true});
 		}else{
-			fetch('https://b2a087a7.ngrok.io/prueba/login.php',
+			fetch('https://e916d2b3.ngrok.io/prueba/login.php',
 			  {
 			  	method: 'post',
 			    headers: {
@@ -37,9 +40,10 @@ export default class Login extends React.Component{
       			let res = respuesta.split('-');
       			
       			if(res[0] == "true"){
+      				this.setState({mensaje:'',background:'',visible_:false});
 					this.props.navigation.navigate('Principal',{sesionid:res[1]});
       			}else{
-      				alert('Datos incorrectos');
+      				this.setState({mensaje:'Datos incorrectos',background:styles.bgRed,visible_:true});
       			}
       		});
 		}
@@ -47,8 +51,10 @@ export default class Login extends React.Component{
 
 
 	render(){
+		const { mensaje, background, visible_ } = this.state;
 		return(
 			<View style={styles.containerForm}>
+				{visible_ ? <View style={[styles.msg,background,{top:10}]}><Text style={{color:'white'}}>{mensaje}</Text></View> : null}
 				<View style={[styles.inputGroup,{marginTop:25}]}>
 					<TextInput
 						placeholder="USERNAME"
@@ -65,6 +71,9 @@ export default class Login extends React.Component{
 				</View>
 				<View style={styles.inputGroup}>
 					<TouchableOpacity style={styles.boton} onPress={() => this.validarDatos()}><Text style={{color:'white'}}>INICIAR SESION</Text></TouchableOpacity>
+				</View>
+				<View style={styles.inputGroup}>
+					<TouchableOpacity style={styles.botonOnlyBorder} onPress={() => this.props.navigation.navigate('Register')}><Text style={{color:'green'}}>REGISTRARME</Text></TouchableOpacity>
 				</View>
 			</View>
 		);
