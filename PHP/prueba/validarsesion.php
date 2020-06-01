@@ -8,11 +8,7 @@ $request = json_decode($Received_JSON,true);
 
 
 if(isset($_SESSION['id']) && isset($_SESSION['user'])){
-	if(isset($request['sesion'])){
-		
-	}else{
-		echo "false";
-	}
+	echo "true".'-'.$_SESSION['rol_id'];
 }else{
 	echo "false";
 }

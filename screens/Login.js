@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity } from 'react-native';
 import styles from '../styles/styles';
+import routes from '../rutas/rutas';
 export default class Login extends React.Component{
 
 	constructor(props){
@@ -11,9 +12,38 @@ export default class Login extends React.Component{
 			password:'',
 			mensaje:'',
 			background:'',
-			visible_:false
+			visible_:false,
+			active:false
 		}
 	}
+
+	componentDidMount(){
+		this.validarSesion();
+	}
+
+	validarSesion(){
+		fetch(routes.baseurl.url+'/prueba/validarsesion.php',
+			  {
+			  	method: 'post',
+			    headers: {
+			       'Accept': 'application/json, text/plain, */*',
+			       'Content-Type': 'application/json'
+			    },
+			    body: JSON.stringify({sesion:this.state.sesion})
+			  }
+      	)
+      	.then(response => response.text())
+      	.then(respuesta => {
+      		//alert(respuesta);
+      		let res = respuesta.split('-');
+      		if(res[0] == "true"){
+				//this.setState({rol:res[1]});
+				this.setState({active:true});      			
+      			this.props.navigation.navigate('Principal');
+      		}
+      	});
+	}
+
 
 	validarDatos(){
 		const { username , password } = this.state;
@@ -25,7 +55,7 @@ export default class Login extends React.Component{
 		}else if(password.length == 0){
 			this.setState({mensaje:'Por favor complete el campo password',background:styles.bgRed,visible_:true});
 		}else{
-			fetch('https://e916d2b3.ngrok.io/prueba/login.php',
+			fetch(routes.baseurl.url+'/prueba/login.php',
 			  {
 			  	method: 'post',
 			    headers: {
@@ -38,7 +68,6 @@ export default class Login extends React.Component{
       		.then(response => response.text())
       		.then(respuesta => {
       			let res = respuesta.split('-');
-      			
       			if(res[0] == "true"){
       				this.setState({mensaje:'',background:'',visible_:false});
 					this.props.navigation.navigate('Principal',{sesionid:res[1]});
@@ -51,7 +80,7 @@ export default class Login extends React.Component{
 
 
 	render(){
-		const { mensaje, background, visible_ } = this.state;
+		const { mensaje, background, visible_,active } = this.state;
 		return(
 			<View style={styles.containerForm}>
 				{visible_ ? <View style={[styles.msg,background,{top:10}]}><Text style={{color:'white'}}>{mensaje}</Text></View> : null}
@@ -64,6 +93,8 @@ export default class Login extends React.Component{
 				</View>
 				<View style={styles.inputGroup}>
 					<TextInput
+					    secureTextEntry={true}
+						password={true}
 						placeholder="PASSWORD"
 						style={styles.input}
 						onChangeText={(text) =>  this.setState({password:text})}

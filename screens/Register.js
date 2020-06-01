@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity } from 'react-native';
 import styles from '../styles/styles';
+import routes from '../rutas/rutas';
 export default class Register extends React.Component{
 
 	constructor(props){
@@ -10,6 +11,7 @@ export default class Register extends React.Component{
 			username:'',
 			password:'',
 			email:'',
+			telefono:'',
 			repassword:'',
 			mensaje:'',
 			background:'',
@@ -18,13 +20,14 @@ export default class Register extends React.Component{
 	}
 
 	validarDatos(){
-		const { username , password, email, repassword } = this.state;
+		const { username , password, email, repassword, telefono } = this.state;
 		let rg_expr = /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
-		//alert('username => ' + username + ' - ' + password);
 		if(username.trim().length == 0 && password.trim().length == 0 && email.trim().length == 0 && repassword.trim().length == 0){
 			this.setState({mensaje:'Por favor complete todos los campos',background:styles.bgRed,visible_:true});
 		}else if(!rg_expr.test(email.trim()) || email.length == 0){
 			this.setState({mensaje:'Por favor complete todos el campo email y ingrese un correo',background:styles.bgRed,visible_:true});
+		}else if(telefono.trim() == "" || telefono.length == 0 || telefono.trim() == 0){
+			this.setState({mensaje:'Por favor complete todos el campo el telefono',background:styles.bgRed,visible_:true});
 		}else if(username.trim().length == 0){
 			this.setState({mensaje:'Por favor complete el campo username',background:styles.bgRed,visible_:true});
 		}else if(password.trim().length == 0){
@@ -32,7 +35,7 @@ export default class Register extends React.Component{
 		}else if((repassword.trim().length == 0 || repassword != password)){
 			this.setState({mensaje:'Por favor complete el campo repetir-password y verifique que ambas contrasenias se han iguales',background:styles.bgRed,visible_:true});
 		}else{
-			fetch('https://e916d2b3.ngrok.io/prueba/registrar.php',
+			fetch(routes.baseurl.url+'/prueba/registrar.php',
 			  {
 			  	method: 'post',
 			    headers: {
@@ -43,17 +46,16 @@ export default class Register extends React.Component{
 			    	user:username,
 			    	pass:password,
 			    	repass:repassword,
-			    	email:email
+			    	email:email,
+			    	telefono:telefono
 			    })
 			  }
       		)
       		.then(response => response.text())
       		.then(respuesta => {
       			let res = respuesta.split('-');
-      			
       			if(res[0] != "failed"){
       				this.setState({mensaje:'Datos insertados',background:styles.bgGreen,visible_:true});
-					//this.props.navigation.navigate('Principal',{sesionid:res[1]});
       			}else{
       				this.setState({mensaje:'Ha ocurrido un error al intentar insertar los datos',background:styles.bgRed,visible_:true});
       			}
@@ -83,6 +85,15 @@ export default class Register extends React.Component{
 				</View>
 				<View style={styles.inputGroup}>
 					<TextInput
+						placeholder="TELEFONO"
+						style={styles.input}
+						onChangeText={(text) =>  this.setState({telefono:text})}
+					/>
+				</View>
+				<View style={styles.inputGroup}>
+					<TextInput
+						secureTextEntry={true}
+						password={true}
 						placeholder="PASSWORD"
 						style={styles.input}
 						onChangeText={(text) =>  this.setState({password:text})}
@@ -90,6 +101,8 @@ export default class Register extends React.Component{
 				</View>
 				<View style={styles.inputGroup}>
 					<TextInput
+						secureTextEntry={true}
+						password={true}
 						placeholder="REPEAT PASSWORD"
 						style={styles.input}
 						onChangeText={(text) =>  this.setState({repassword:text})}
@@ -101,7 +114,6 @@ export default class Register extends React.Component{
 				<View style={styles.inputGroup}>
 					<TouchableOpacity style={styles.botonOnlyBorder} onPress={() => this.props.navigation.navigate('Login')}><Text style={{color:'green'}}>INICIAR SESION</Text></TouchableOpacity>
 				</View>
-				
 			</View>
 		);
 	}	

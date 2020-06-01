@@ -26,9 +26,13 @@ if(empty($user) && empty($pass)){
 	if($query){
 		if($query->rowCount() > 0){
 			session_start();
-			$_SESSION['id'] = $query->fetch()['id'];
-			$_SESSION['user'] = $query->fetch()['user'];
-			echo "true-".$query->fetch()['id'];
+			while($row = $query->fetch()){
+				$_SESSION['id'] = $row['id'];
+			    $_SESSION['user'] = $row['user'];
+			    $_SESSION['rol_id'] = $row['rol_id'];
+			}
+			echo "true";
+			
 		}else{
 			echo "false";
 		}
